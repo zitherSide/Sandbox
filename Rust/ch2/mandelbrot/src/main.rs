@@ -139,6 +139,10 @@ fn render(pixels: &mut [u8], bounds: (usize, usize), upper_left: Complex<f64>, l
 fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<(), std::io::Error>
 {
     let output = File::create(filename)?;
+    //let output = match File::create(filename) {
+    //     Ok(f) => f,
+    //     Err(err) => return Err(err)
+    // }
 
     let encoder = PNGEncoder::new(output);
     encoder.encode(&pixels, bounds.0 as u32, bounds.1 as u32, ColorType::Gray(8))?;
