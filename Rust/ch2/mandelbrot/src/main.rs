@@ -1,3 +1,6 @@
+//! Rust sample using mandelbrot 
+//! fractal figure drawing.
+
 extern crate num;
 use num::Complex;
 
@@ -63,6 +66,10 @@ fn escape_time(c: Complex<f64>, limit: u32) -> Option<u32> {
     None
 }
 
+/// Test
+/// ```
+/// assert_eq!(parse_pair::<i32>("",    ','), None);
+/// ```
 fn parse_pair<T: FromStr>(s: &str, separator: char) -> Option<(T, T)> {
     match s.find(separator) {
         None => None,
