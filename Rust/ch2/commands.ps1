@@ -1,3 +1,5 @@
+# rustup
+
 #cargo --version
 #rustc --version
 #rustdoc --version
@@ -12,6 +14,8 @@
 
 # cargo build --release
 # cargo build --verbose
-Measure-Command {./target/release/mandelbrot mandel.png 4000x3000 -1.20,0.35 -1.0,0.20}
+# Measure-Command {./target/release/mandelbrot mandel.png 4000x3000 -1.20,0.35 -1.0,0.20}
 
-#cargo doc --no-deps --open
+# cargo doc --no-deps --open
+
+cargo new --lib json
