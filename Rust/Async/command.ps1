@@ -1,0 +1,1 @@
+cargo new --lib async-chat
