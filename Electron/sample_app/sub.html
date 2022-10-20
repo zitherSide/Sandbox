@@ -2,22 +2,21 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample App</title>
 </head>
 <body>
-    <h1>Hello world</h1>
-    <p id="msg">This is a sample application!</p>
+    <h1>Sub window</h1>
+    <p id="msg">This is sample application</p>
     <div>
         <button onclick="doAction()">CLICK</button>
     </div>
 </body>
-</html>
 
 <script>
-    var counter = 0
     function doAction(){
-        let p = document.querySelector("#msg")
-        p.textContent = "count: " + ++counter
+        window.close()
     }
 </script>
+</html>
