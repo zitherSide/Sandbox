@@ -12,22 +12,42 @@ function createWindow(){
             nodeIntegration: true
         }
     })
-    win.loadFile('index.html')
-    // win.loadURL('https://www.tuyano.com')
-    win.webContents.openDevTools()
-
+    
     win.canMove = true;
     win.on('ready-to-show', ()=> { win.show() })
     win.on('show', () => {console.log('show browser-window')})
-    win.on('focus', (event) => {
-        event.sender.canMove = !event.sender.canMove
-        console.log('canMove: ', event.sender.canMove)
+    // win.on('focus', (event) => {
+    //     event.sender.canMove = !event.sender.canMove
+    //     console.log('canMove: ', event.sender.canMove)
+    // })
+    win.on('focus', ({sender}) => {
+        const p = sender.getPosition()
+        const s = sender.getSize()
+        p[0] += 10
+        p[1] += 10
+        s[0] += 10
+        s[1] += 10
+        sender.setPosition(p[0], p[1], true) //3rd for animation
+        sender.setSize(s[0], s[1], true)
+        const b = sender.getBounds()
+        console.log('bounds: [', b.x , ',', b.y, ',', b.width, ',', b.height, ']')
     })
-    win.on('will-move', (event) => { if(!event.sender.canMove) event.preventDefault() })
-    win.on('move', ({sender}) => { console.log('move to:', sender.getPosition()) })
-    win.on('will-resize', (event) => { if(event.sender.canMove) event.preventDefault() })
-    win.on('resize', ({sender}) => { console.log('resizze to: ', sender.getSize()) })
-
+    // win.on('will-move', (event) => { if(!event.sender.canMove) event.preventDefault() })
+    // win.on('move', ({sender}) => { console.log('move to:', sender.getPosition()) })
+    // win.on('will-resize', (event) => { if(event.sender.canMove) event.preventDefault() })
+    // win.on('resize', ({sender}) => { console.log('resizze to: ', sender.getSize()) })
+    
+    const webc = win.webContents
+    webc.on('new-window', () => { console.log('new-window') })
+    webc.on('did-finish-load', () => { console.log('did finish load.') })
+    webc.on('dom-ready', () => { console.log('dom-ready') })
+    webc.on('will-navigate', () => { console.log('will-navigate') })
+    webc.on('did-navigate', () => { console.log('did-navigate') })
+    
+    win.loadFile('index.html')
+    // win.loadURL('https://www.tuyano.com')
+    win.webContents.openDevTools()
+    
     const child1 = new BrowserWindow({
         width: 350,
         height: 200,
