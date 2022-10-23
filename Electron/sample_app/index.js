@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, BrowserView} = require('electron');
 
 const logSenderID = (event) => { console.log('focus', event.sender.id)}
 
@@ -47,7 +47,13 @@ function createWindow(){
     win.loadFile('index.html')
     // win.loadURL('https://www.tuyano.com')
     win.webContents.openDevTools()
-    
+
+    const view = new BrowserView()
+    view.webContents.loadURL('https://electronjs.org')
+
+    win.setBrowserView(view)
+    view.setBounds({x: 200, y: 150, width:300, height: 150})
+
     const child1 = new BrowserWindow({
         width: 350,
         height: 200,
