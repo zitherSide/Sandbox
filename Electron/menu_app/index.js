@@ -5,7 +5,8 @@ function createWindow(){
         width: 1200,
         height: 1080,
     })
-    win.loadFile('index.html')
+    win.loadFile('menu.html')
+    // win.loadFile('index.html')
 }
 
 // function createMenu(){
