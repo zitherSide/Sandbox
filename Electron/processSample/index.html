@@ -19,6 +19,7 @@
         <p id="msg">please click</p>
         <button class="btn btn-primary" onclick="doit()">Click</button>
         <button class="btn btn-primary" onclick="closeOthers()">Close Others</button>
+        <button class="btn btn-secondary" onclick="showDialog()">ShowDialog</button>
     </div>
 
     <script>
@@ -40,6 +41,10 @@
         function closeOthers(){
             console.log('close pushed')
             window.testapi.closeOthers('b').then( data => document.querySelector('#msg').innerHTML = data)
+        }
+
+        function showDialog(){
+            window.testapi.showDialog().then(reply => alert(`You choose ${JSON.stringify(reply)}`));
         }
 
         window.addEventListener('contextmenu', (e) => {

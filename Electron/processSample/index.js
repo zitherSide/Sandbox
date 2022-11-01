@@ -1,4 +1,4 @@
-const {app, Menu, MenuItem, BrowserWindow, ipcMain} = require('electron')
+const {app, Menu, MenuItem, BrowserWindow, ipcMain, dialog} = require('electron')
 const path = require('path')
 
 function createWindow(){
@@ -13,7 +13,7 @@ function createWindow(){
         }
     })
     win.loadFile('index.html')
-    win.openDevTools()
+    // win.openDevTools()
 
     let n = 100
     let res = ''
@@ -75,9 +75,29 @@ ipcMain.handle('createMenu', createMenu)
 ipcMain.handle('showContextMenu', showContextMenu)
 ipcMain.handle('closeOthers', (event, arg) => {
     console.log('close main')
+    const selfID = event.sender.getOwnerBrowserWindow().id
     const ws = BrowserWindow.getAllWindows()
-    ws.filter(w => w.id !== arg.id)
+    ws.filter(w => w.id !== selfID)
         .forEach(w => w.close())
 
-    return 'onlyl open id = ' + arg
+    return `only open id = ${selfID}, ${arg}`
+})
+ipcMain.handle('showMsgBox', (event) => {
+    const btns = ['OK', 'Cancel', 'Got it', "I don't fully understand...", 'Error']
+    const reply = dialog.showMessageBox(event.sender.getOwnerBrowserWindow(), {
+        title: 'Message',
+        message: 'This is the message',
+        detail: 'Push OK to close',
+        buttons: btns,
+        checkboxLabel: 'Check!'
+    }).then(res => {
+        if(res.response === 4){
+            dialog.showErrorBox('Caution', 'Some Error!')
+        }else{
+            // dialog.alert(`Got it! ${btns[res.response]}`)
+        }
+        return res
+    })
+
+    return reply
 })
