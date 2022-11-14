@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>Data Sample</title>
+</head>
+<body>
+    <nav class="navbar bg-primary mb-4">
+        <h1 class="display-4 text-light">Data Sample</h1>
+    </nav>
+    <div class="container">
+        <p id="msg">please click button</p>
+        <p>
+            <textarea name="" id="ta" cols="30" rows="10" class="form-contol"></textarea>
+        </p>
+        <button class="btn btn-primary" onclick="doit()">Click</button>
+        <button class="btn btn-primary" onclick="showDialog()">Show Dialog</button>
+        <button class="btn btn-primary" onclick="writeFile()">Write</button>
+        <button class="btn btn-primary" onclick="getHttp()">GetHttp</button>
+        <button class="btn btn-primary" onclick="getHttpByNet()">GetHttpByNet</button>
+        <button class="btn btn-primary" onclick="getRSS()">GetRSS</button>
+    </div>
+</body>
+
+<script>
+    function doit(){
+        window.api.readFile('sample.txt').then( content => 
+            document.querySelector('#ta').value = content
+        ).catch(e => alert(e))
+    }
+    function showDialog(){
+        window.api.showOpenDialog()
+            .then(path => window.api.readFile(path[0]))
+            .then(content => document.querySelector('#ta').value = content)
+            .catch((e) => document.querySelector('#ta').value = 'canceled')
+    }
+    function writeFile(){
+        window.api.showSaveDialog()
+            .then(path => {
+                if(path === undefined){
+                    throw new Error('canceled')
+                }
+                const content = document.querySelector('#ta').value
+                return window.api.writeFile('saved.txt', content)
+            })  
+            .then(alert('saved'))
+            .catch(e => alert(e) )
+    }
+    function getHttp(){
+        const url = 'https://tuyano-api.firebaseio.com/covid.json'
+        window.api.get(url)
+            .then(data => {
+                alert(data)
+                document.querySelector('#msg').innerHTML = data
+            })
+    }
+    function getHttpByNet(){
+        const urldata = {
+            method: 'GET',
+            protocol: 'https:',
+            hostname: 'tuyano-api.firebaseio.com',
+            port: 443,
+            path: '/covid.json'
+        }
+        window.api.get_json_data(urldata)
+    }
+    function getRSS(){
+        const url = 'https://news.google.com/rss?hl==ja&gl=JP&ceid=JP:ja'
+        window.api.getRss(url).then(data => {
+            // document.querySelector('#msg').innerHTML = JSON.stringify(data)
+            document.querySelector('#msg').innerHTML = listify(data.items)
+        })
+    }
+    const listify = (arr) => {
+        let ret = '<ul class="list-group">'
+        arr.forEach(elem => {
+            ret += '<li class="list-item-group">' + elem.title + '(' + elem.pubDate + ')</li>'
+        });
+        ret += '</ul>'
+        return ret
+    }
+</script>
+</html>
