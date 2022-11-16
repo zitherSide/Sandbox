@@ -23,6 +23,9 @@
         <button class="btn btn-primary" onclick="getHttp()">GetHttp</button>
         <button class="btn btn-primary" onclick="getHttpByNet()">GetHttpByNet</button>
         <button class="btn btn-primary" onclick="getRSS()">GetRSS</button>
+        <button class="btn btn-primary" onclick="addUserToDB()">AddUserToDB</button>
+        <button class="btn btn-primary" onclick="showUsers()">ShowUsers</button>
+        <button class="btn btn-primary" onclick="query()">query</button>
     </div>
 </body>
 
@@ -72,16 +75,40 @@
         const url = 'https://news.google.com/rss?hl==ja&gl=JP&ceid=JP:ja'
         window.api.getRss(url).then(data => {
             // document.querySelector('#msg').innerHTML = JSON.stringify(data)
-            document.querySelector('#msg').innerHTML = listify(data.items)
+            document.querySelector('#msg').innerHTML = listify(data.items, getNewsStr)
         })
     }
-    const listify = (arr) => {
+    const listify = (arr, formatter) => {
         let ret = '<ul class="list-group">'
         arr.forEach(elem => {
-            ret += '<li class="list-item-group">' + elem.title + '(' + elem.pubDate + ')</li>'
+            ret += '<li class="list-item-group">' + formatter(elem) + '</li>'
         });
         ret += '</ul>'
         return ret
+    }
+    const getNewsStr = (news) => news.title + '(' + news.pubDate + ')'
+
+    function addUserToDB(){
+        const userArr = document.querySelector('#ta').value.split(',');
+        const userData = {
+            name: userArr[0],
+            mail: userArr[1],
+            tel: userArr[2]
+        }
+        window.api.addUser(userData)
+            .then(res => alert(res))
+            .catch(e => alert(e))
+    }
+
+    const getUserStr = (user) => `${user.id}, ${user.name}, ${user.mail}, ${user.tel}`
+    function showUsers(){
+        window.api.selectAllUsers().then(res => document.querySelector('#msg').innerHTML = listify(res, getUserStr))
+    }
+
+    function query(){
+        const where = document.querySelector('#ta').value
+        const query = `select * from users where ${where}`
+        window.api.querySQL(query).then(res => document.querySelector('#msg').innerHTML = listify(res, getUserStr))
     }
 </script>
 </html>
