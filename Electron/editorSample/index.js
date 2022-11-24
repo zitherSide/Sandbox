@@ -1,4 +1,5 @@
 const {app, Menu, BrowserWindow, dialog, ipcMain } = require('electron')
+const { findSourceMap } = require('module')
 const path = require('path')
 const { createInflate } = require('zlib')
 const fs = require('fs').promises
@@ -93,6 +94,33 @@ const createMenu = () => {
                 {label: '20', click: () => setFontSize(20)},
                 {label: '24', click: () => setFontSize(24)},
             ]
+        },
+        {
+            label: 'Find',
+            submenu: [
+                {label: 'Find...', click: () => {
+                    const w = BrowserWindow.getFocusedWindow()
+                    w.webContents.send('show-find-modal')
+                }},
+                {label: 'Find Next', accelerator: 'CommandOrControl+right', click: () => {
+                    const w = BrowserWindow.getFocusedWindow()
+                    w.webContents.send('findnext')
+                }},
+                {label: 'Find Prev', accelerator: 'CommandOrControl+left', click: () => {
+                    const w = BrowserWindow.getFocusedWindow()
+                    w.webContents.send('findprev')
+                }},
+                {role: 'separator'},
+                {label: 'Replace...', click: () => {
+                    const w = BrowserWindow.getFocusedWindow()
+                    w.webContents.send('show-replace-modal')
+                }},
+                {label: 'Replace Next', accelerator: 'CommandOrControl+r', click: () => {
+                    const w = BrowserWindow.getFocusedWindow()
+                    w.webContents.send('replace-next')
+                }},
+                {label: 'Replace All', accelerator: 'CommandOrControl+r', click: () => replaceAll()}
+            ]
         }
     ]
     const menu = Menu.buildFromTemplate(menuTemp)
@@ -106,4 +134,4 @@ ipcMain.handle('joinPath', (event, dirname, fname) => path.join(dirname, fname))
 ipcMain.handle('readFile', (event, path) => fs.readFile(path).then(res => res.toString()))
 ipcMain.handle('extname', (event, filename) => path.extname(filename))
 ipcMain.handle('writeFile', (event, filename, content) => fs.writeFile(filename, content))
-ipcMain.handle('loadFolder', (event, folderpath) => loadFoler(folderpath))
+ipcMain.handle('loadFolder', (event, folderpath) => loadFolder(folderpath))

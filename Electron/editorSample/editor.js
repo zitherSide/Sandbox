@@ -15,7 +15,22 @@ window.addEventListener('DOMContentLoaded', () => {
     editor.session.setMode('ace/mode/text')
     editor.focus()
     editor.session.getDocument().on('change', ob => changed = true)
+
+    sidebar.addEventListener('dragover', (event) => {
+        event.preventDefault()
+        current_fname = null
+        folder_path = null
+        folder_items = null
+    })
+    sidebar.addEventListener('drop', event => {
+        editor.session.getDocument().setValue('')
+        changed = false
+        const folder = event.dataTransfer.files[0]
+        folder_path = folder.path
+        window.electronAPI.loadFolder(folder_path)
+    })
 })
+
 
 const setTheme = (theme) => {
     editor.setTheme(`ace/theme/${theme}`)
@@ -28,13 +43,13 @@ const setMode = (mode) => {
 const setFontSize = (size) => editor.setFontSize(size)
 
 window.electronAPI.handleFolderItems((event, files) => {
+    console.log('tree to updated')
     let listHtml = '<ul>'
     files.forEach(f => {
         listHtml += `<li id="item${f}" onclick="openfile('${f}')">${f}</li>`
     })
     listHtml += '</ul>'
     sidebar.innerHTML = listHtml
-    console.log('tree updated')
 })
 window.electronAPI.setFolderPath((event, folderpath) => folder_path = folderpath)
 
@@ -76,9 +91,72 @@ const savefile = () => {
 window.electronAPI.savefile(event => {
     savefile()
 })
-window.electronAPI.showCreateFileModal( () =>  {
-    $('#save-modal').modal('show') 
+window.electronAPI.showCreateFileModal( () => $('#save-modal').modal('show') )
+window.electronAPI.showFindModal( () => $('#find-modal').modal('show'))
+window.electronAPI.findnext( () => editor.findNext())
+window.electronAPI.findprev( () => editor.findPrevious())
+window.electronAPI.showReplaceModal( () => {
+    document.querySelector('#input_find2').value = ''
+    document.querySelector('#input_replace').value = ''
+    $('#replace-modal').modal('show')
 })
+
+const replaceNext = () => {
+    const pattern = document.querySelector('#input_replace').value
+    editor.replace(pattern, {
+        backwards: false,
+        wrap: false,
+        caseSensitive: false,
+        wholeWord: false,
+        regExp: false
+    })
+}
+window.electronAPI.replaceNext(replaceNext)
+const replaceNow = () => {
+    const pattern = document.querySelector('#input_find2').value
+    editor.focus()
+    editor.gotoLine(0)
+    editor.find(pattern, {
+        backwards: false,
+        wrap: false,
+        caseSinsitive: false,
+        wholeWord: false,
+        regExp: false
+    })
+    replaceNext()
+}
+window.electronAPI.replaceAll(() => {
+    const pattern = document.querySelectro('#input_find2').value
+    editor.focus()
+    editor.find(pattern, {
+        backwards: false,
+        wrap: false,
+        caseSinsitive: false,
+        wholeWord: false,
+        regExp: false
+    })
+    const replaced = document.querySelector('#input_replace').value
+    editor.replaceAll(replaced, {
+        backwards: false,
+        wrap: false,
+        caseSensitive: false,
+        wholeWord: false,
+        regExp: false
+    })
+})
+
+const search = () => {
+    const searchTarget = document.querySelector('#input_find').value
+    editor.focus()
+    editor.gotoLine(0)
+    editor.find(searchTarget, {
+        backwards: false,
+        wrap: false,
+        caseSnsitive: false,
+        wholeWord: false,
+        regExp: false
+    })
+}
 
 const createfileresult = () => {
     current_fname = document.querySelector('#input_file_name').value

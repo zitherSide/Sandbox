@@ -41,5 +41,45 @@
             </div>
         </div>
     </div>
+
+    <!-- Find Dialog-->
+    <div class="modal fade" id="find-modal" tabindex="-1" role="dialog">
+        <fiv class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Find</h5>
+                </div>
+                <div class="modal-body">
+                    <p>find string:</p>
+                    <input type="text" class="form-control" id="input_find">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="bnt btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="search()">Find</button>
+                </div>
+            </div>
+        </fiv>
+    </div>
+
+    <!-- replace dialog -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="replace-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Find</h6>
+                </div>
+                <div class="modal-body">
+                    <p>find and replace string:</p>
+                    <input type="text" class="form-control mb-2" id="input_find2">
+                    <input type="text" class="form-control" id="input_replace">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="replaceNow()">Find</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
