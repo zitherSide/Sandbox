@@ -1,6 +1,8 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import path from 'path'
+
 
 /**
  * Set `__static` path to static files in production
@@ -24,7 +26,7 @@ function createWindow () {
     useContentSize: true,
     width: 1000,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
     }
   })
 
@@ -47,6 +49,16 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.handle('showOpenDialog', (e) => {
+  const w = e.sender.getOwnerBrowserWindow()
+  dialog.showOpenDialog(w, {
+    properties: ['openFile'],
+    filters: [
+      {name: 'Text Files', extensions: ['txt']}
+    ]
+  })
 })
 
 /**
