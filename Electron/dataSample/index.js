@@ -38,10 +38,28 @@ function createWindow(){
         }
     })
     win.loadFile('index.html')
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
     return win.id
 }
 
+const createMenu = () => {
+    const menu_template = [
+        {
+            label: 'Menu',
+            submenu: [
+                {label: 'UpdateMsg', click: () => {updateMsg()}},
+                {label: 'doDb', click: () => {updateMsgByDB(7)}},
+                {type: 'separator'},
+                {role: 'quit'}
+            ]
+        },
+        {role: 'editMenu'}
+    ]
+    
+    const menu = Menu.buildFromTemplate(menu_template)
+    Menu.setApplicationMenu(menu)
+}
+createMenu()
 app.whenReady().then(createWindow)
 app.on('window-all-close', () => db.close())
 
@@ -141,3 +159,32 @@ ipcMain.handle('querySQL', (event, sql) => {
         })
     })
 })
+
+const updateMsg = () => {
+    const w = BrowserWindow.getFocusedWindow()
+    w.webContents.send('updateMsg', 'Do-it')
+}
+
+const updateMsgByDB = (id) => {
+    const w = BrowserWindow.getFocusedWindow()
+    searchDB(id)
+        .then(res => w.webContents.send('updateMsg', res))
+        .catch(err => console.log(err))
+}
+
+const selectStmt = db.prepare('select * from users where id = ?')
+const searchDB = (id) => {
+    return new Promise((resolve, reject) => {
+        db.all(`select * from users where id = ${id}`, (err, rows) => {
+            if(err === null){
+                const jsn = JSON.stringify(rows[0])
+                console.log(jsn)
+                resolve(jsn)
+            }else{
+                console.log(err.message)
+                reject(err.mesasge)
+            }
+        })
+
+    })
+}

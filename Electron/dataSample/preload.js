@@ -10,7 +10,8 @@ contextBridge.exposeInMainWorld('api', {
     getRss: (url) => ipcRenderer.invoke('getRss', url),
     addUser: (user) => ipcRenderer.invoke('addUser', user),
     selectAllUsers: () => ipcRenderer.invoke('selectAllUsers'),
-    querySQL: (sql) => ipcRenderer.invoke('querySQL', sql)
+    querySQL: (sql) => ipcRenderer.invoke('querySQL', sql),
+    updateMsg: callback => ipcRenderer.on('updateMsg', callback),
 })
 
 ipcRenderer.on('get-json-data-result', (result, data) => {

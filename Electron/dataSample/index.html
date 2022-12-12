@@ -15,6 +15,12 @@
     <div class="container">
         <p id="msg">please click button</p>
         <p>
+            <input type="text" class="form-control" id="fid">
+        </p>
+        <button class="btn btn-primary" id="btn" onclick="action()">Click</button>
+        <hr>
+
+        <p>
             <textarea name="" id="ta" cols="30" rows="10" class="form-contol"></textarea>
         </p>
         <button class="btn btn-primary" onclick="doit()">Click</button>
@@ -110,5 +116,11 @@
         const query = `select * from users where ${where}`
         window.api.querySQL(query).then(res => document.querySelector('#msg').innerHTML = listify(res, getUserStr))
     }
+
+    window.api.updateMsg( (_event, msg) => {
+            document.querySelector('#msg').textContent = JSON.stringify(msg)
+            return msg
+        })
+
 </script>
 </html>
