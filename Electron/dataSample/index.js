@@ -37,8 +37,10 @@ function createWindow(){
             preload: path.join(app.getAppPath(), 'preload.js')
         }
     })
+    if(process.env.NODE_ENV !== 'test'){
+        win.webContents.openDevTools()
+    }
     win.loadFile('index.html')
-    // win.webContents.openDevTools()
     return win.id
 }
 

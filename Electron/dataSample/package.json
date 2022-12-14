@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "test": "mocha"
+    "test": "set NODE_ENV=test&&mocha"
   },
   "author": "",
   "license": "ISC"

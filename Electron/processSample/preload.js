@@ -5,5 +5,7 @@ contextBridge.exposeInMainWorld('testapi', {
     showContextMenu: () => ipcRenderer.invoke('showContextMenu'),
     createMenu: () => ipcRenderer.invoke('createMenu'),
     closeOthers: (arg) => ipcRenderer.invoke('closeOthers', arg),
-    showDialog: () => ipcRenderer.invoke('showMsgBox')
+    showDialog: () => ipcRenderer.invoke('showMsgBox'),
+    doit: callback => ipcRenderer.on('doit', callback),
+    doDb: callback => ipcRenderer.on('doDb', callback)
 })

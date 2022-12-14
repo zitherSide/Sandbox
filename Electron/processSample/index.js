@@ -46,7 +46,8 @@ const createMenu = () => {
                 { role: 'separator' },
                 { role: 'quit' }
             ]
-        }
+        },
+        {role: 'editMenu'}
     ]
     
     const menu = Menu.buildFromTemplate(menu_template)
