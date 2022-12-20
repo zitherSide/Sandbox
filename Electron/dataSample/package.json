@@ -4,8 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "electron": "^21.2.3",
-    "electron-rebuild": "^3.2.9",
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
@@ -13,6 +11,9 @@
     "sqlite3": "^5.1.2"
   },
   "devDependencies": {
+    "electron": "^21.2.3",
+    "electron-builder": "^23.6.0",
+    "electron-rebuild": "^3.2.9",
     "mocha": "^10.2.0",
     "spectron": "^19.0.0"
   },
@@ -20,6 +21,74 @@
     "start": "electron .",
     "test": "set NODE_ENV=test&&mocha"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "zitherSide",
+  "license": "ISC",
+  "build": {
+    "productName": "Sample Electron for me",
+    "copyright": "Copyright (c) 2020 ${author} Software",
+    "appId": "com.exmaple.eletron.SamplApp",
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "appx",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "installerIcon": "build/installerIcon.ico",
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "runAfterFinish": false
+    },
+    "appx": {
+      "applicationId": "com.exampleelectron.SampleApp",
+      "backgroundColor": "#400090",
+      "displayName": "Sample Application",
+      "identityName": "SampleApp",
+      "languages": "ja",
+      "showNameOnTiles": true
+    },
+    "mac": {
+      "icon": "build/icons/icon.icns",
+      "identity": "",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "dmg": {
+      "backgroundColor": "#990033",
+      "title": "sample Applicatin",
+      "contents": [
+        {
+          "x": 100,
+          "y": 200,
+          "type": "link",
+          "path": "/Applicatins"
+        },
+        {
+          "x": 300,
+          "y": 200,
+          "type": "file"
+        }
+      ],
+      "window": {
+        "x": 100,
+        "y": 100,
+        "width": 600,
+        "height": 400
+      }
+    }
+  }
 }
